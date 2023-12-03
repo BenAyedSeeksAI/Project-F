@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"net/http"
 	"rhmanager/models"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InsertCandidate(c *gin.Context) {
-
 	dbse, exists := c.Get("db")
 	if !exists {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not available"})
@@ -59,4 +59,24 @@ func GetCandidateDetails(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, candidate)
+}
+func HireCandidate(c *gin.Context) {
+	dbse := c.MustGet("db").(*sql.DB)
+	var additionalStaffData models.CandidateToStaffData
+	if err := c.ShouldBindJSON(&additionalStaffData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	id := c.Param("id")
+	IntId, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	err = models.DBHireCandidate(dbse, uint(IntId), additionalStaffData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get all staff"})
+		return
+	}
+	c.JSON(http.StatusAccepted, gin.H{"message": "Candidate: Successfull Hiring to Staff!"})
 }

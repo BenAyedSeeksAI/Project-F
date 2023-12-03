@@ -32,9 +32,10 @@ func RunRouting() {
 	}
 	candidateGroup := r.Group("/candidates")
 	{
-		candidateGroup.POST("/create", controller.InsertCandidate)
 		candidateGroup.GET("/get_all", controller.GetCandidateDetails)
+		candidateGroup.POST("/create", controller.InsertCandidate)
 		candidateGroup.POST("/delete", controller.DeleteCandidate)
+		candidateGroup.POST("/hire/:id/", controller.HireCandidate)
 	}
 	r.Run(":8080")
 }

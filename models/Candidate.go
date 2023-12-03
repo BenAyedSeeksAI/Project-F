@@ -103,7 +103,7 @@ func DBDeleteCandidate(db *sql.DB, candId uint) error {
 	return nil
 }
 
-func DBHireCandidate(db *sql.DB, candId uint, departmentId uint) error {
+func DBHireCandidate(db *sql.DB, candId uint, StaffData CandidateToStaffData) error {
 	candidateRow, err := DBGetCandidateByID(db, candId)
 	if candidateRow == nil || err != nil {
 		return err
@@ -115,12 +115,12 @@ func DBHireCandidate(db *sql.DB, candId uint, departmentId uint) error {
 	stf := &Staff{
 		FirstName:    candidateRow.FirstName,
 		LastName:     candidateRow.LastName,
-		Email:        "default@default.xom",
+		Email:        StaffData.CompanyEmail,
 		Profession:   candidateRow.JobOffer,
 		Sex:          candidateRow.Sex,
 		DOB:          candidateRow.DOB,
 		HireDate:     utils.GetTodayDate(),
-		DepartmentID: int(departmentId),
+		DepartmentID: int(StaffData.DepartmentID),
 	}
 	err = DBInsertStaff(db, stf)
 	if err != nil {

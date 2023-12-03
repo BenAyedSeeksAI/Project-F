@@ -19,6 +19,7 @@ func RunRouting() {
 	db := db.OpenDB()
 	r := gin.Default()
 	r.Use(DatabaseMiddleware(db))
+	r.Use(gin.Logger())
 	r.GET("/", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{"msg": "Hello api"}) })
 	departmentGroup := r.Group("/departments")
 	{

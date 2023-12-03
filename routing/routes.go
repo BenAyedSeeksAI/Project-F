@@ -19,7 +19,6 @@ func RunRouting() {
 	db := db.OpenDB()
 	r := gin.Default()
 	r.Use(DatabaseMiddleware(db))
-	r.Use(gin.Logger())
 	r.GET("/", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{"msg": "Hello api"}) })
 	departmentGroup := r.Group("/departments")
 	{
@@ -35,6 +34,7 @@ func RunRouting() {
 	{
 		candidateGroup.POST("/create", controller.InsertCandidate)
 		candidateGroup.GET("/get_all", controller.GetCandidateDetails)
+		candidateGroup.POST("/delete", controller.DeleteCandidate)
 	}
 	r.Run(":8080")
 }

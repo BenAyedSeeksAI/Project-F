@@ -10,18 +10,13 @@ import (
 )
 
 func InsertDepartment(c *gin.Context) {
-
-	dbse, exists := c.Get("db")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not available"})
-	}
+	dbse := c.MustGet("db").(*sql.DB)
 	var department models.Department
 	if err := c.ShouldBindJSON(&department); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	err := models.DBInsertDepartment(dbse.(*sql.DB), &department)
+	err := models.DBInsertDepartment(dbse, &department)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert staff"})
 		return
@@ -30,11 +25,8 @@ func InsertDepartment(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Department inserted successfully"})
 }
 func GetDepartmentDetails(c *gin.Context) {
-	dbse, exists := c.Get("db")
-	if !exists {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not available"})
-	}
-	depmt, err := models.DBGetDepartmentDetails(dbse.(*sql.DB))
+	dbse := c.MustGet("db").(*sql.DB)
+	depmt, err := models.DBGetDepartmentDetails(dbse)
 	if err != nil {
 		log.Fatal(err.Error())
 		return

@@ -5,10 +5,17 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 func GetTodayDate() time.Time {
 	return time.Now()
+}
+func PrettyLogSuccess(message string) {
+	fmt.Println("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤")
+	color.Cyan(message)
+	fmt.Println("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤")
 }
 func IDExists(dbse *sql.DB, id uint, tableName string, idColumnName string) bool {
 	sqlStr := `SELECT COUNT(*) FROM %s WHERE  %s= ?`

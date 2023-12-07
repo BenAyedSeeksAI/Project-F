@@ -2,21 +2,26 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"io/ioutil"
 	"rhmanager/utils"
 
 	"log"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 const (
-	scriptCreateFile = "./db/script_create.sql"
-	scriptSeedFile   = "./db/script_seed.sql"
+	configurationPath = "./configuration.json"
 )
 
 func OpenDB() *sql.DB {
-	database, _ := sql.Open("sqlite3", "./hrdb.db")
+	config := GetDBConfiguration(configurationPath)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		config.Host, config.Port, config.User, config.Password, config.DBName)
+	database, _ := sql.Open("postgres", psqlInfo)
 	return database
 }
 func SqlExecution(scriptPath string, db *sql.DB) {
@@ -33,9 +38,9 @@ func SqlExecution(scriptPath string, db *sql.DB) {
 func EstablishDB() {
 	db := OpenDB()
 	defer db.Close()
-	SqlExecution(scriptCreateFile, db)
+	SqlExecution(GetDBConfiguration(configurationPath).ScriptCreateFile, db)
 	utils.PrettyLogSuccess("Database created Successfully ...")
-	SqlExecution(scriptSeedFile, db)
+	SqlExecution(GetDBConfiguration(configurationPath).ScriptSeedFile, db)
 	utils.PrettyLogSuccess("Seed created Successfully ...")
 	utils.PrettyLogSuccess("Database has been established ...")
 }

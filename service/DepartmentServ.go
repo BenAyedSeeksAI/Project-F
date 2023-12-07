@@ -1,4 +1,4 @@
-package controller
+package service
 
 import (
 	"database/sql"
@@ -9,26 +9,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InsertStaff(c *gin.Context) {
+func InsertDepartment(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
-	var staff models.Staff
-	if err := c.ShouldBindJSON(&staff); err != nil {
+	var department models.Department
+	if err := c.ShouldBindJSON(&department); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := models.DBInsertStaff(dbse, &staff)
+	err := models.DBInsertDepartment(dbse, &department)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert staff"})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "Staff inserted successfully"})
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Department inserted successfully"})
 }
-func GetStaffDetails(c *gin.Context) {
+func GetDepartmentDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
-	staff, err := models.DBGetAllStaffDetails(dbse)
+	depmt, err := models.DBGetDepartmentDetails(dbse)
 	if err != nil {
 		log.Fatal(err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, staff)
+	c.JSON(http.StatusOK, depmt)
 }

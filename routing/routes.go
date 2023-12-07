@@ -3,8 +3,8 @@ package routing
 import (
 	"database/sql"
 	"net/http"
-	controller "rhmanager/Controller"
 	"rhmanager/db"
+	"rhmanager/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,26 +16,27 @@ func DatabaseMiddleware(db *sql.DB) gin.HandlerFunc {
 	}
 }
 func RunRouting() {
-	db := db.OpenDB()
+	db := db.OpenDBForRoute()
+	defer db.Close()
 	r := gin.Default()
 	r.Use(DatabaseMiddleware(db))
 	r.GET("/", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{"msg": "Hello api"}) })
 	departmentGroup := r.Group("/departments")
 	{
-		departmentGroup.GET("/get_all", controller.GetDepartmentDetails)
-		departmentGroup.POST("/create", controller.InsertDepartment)
+		departmentGroup.GET("/get_all", service.GetDepartmentDetails)
+		departmentGroup.POST("/create", service.InsertDepartment)
 	}
 	staffGroup := r.Group("/staffs")
 	{
-		staffGroup.GET("/get_all", controller.GetStaffDetails)
-		staffGroup.POST("/create", controller.InsertStaff)
+		staffGroup.GET("/get_all", service.GetStaffDetails)
+		staffGroup.POST("/create", service.InsertStaff)
 	}
 	candidateGroup := r.Group("/candidates")
 	{
-		candidateGroup.GET("/get_all", controller.GetCandidateDetails)
-		candidateGroup.POST("/create", controller.InsertCandidate)
-		candidateGroup.POST("/delete", controller.DeleteCandidate)
-		candidateGroup.POST("/hire/:id/", controller.HireCandidate)
+		candidateGroup.GET("/get_all", service.GetCandidateDetails)
+		candidateGroup.POST("/create", service.InsertCandidate)
+		candidateGroup.POST("/delete", service.DeleteCandidate)
+		candidateGroup.POST("/hire/:id/", service.HireCandidate)
 	}
 	r.Run(":8080")
 }

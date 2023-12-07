@@ -16,13 +16,21 @@ const (
 	configurationPath = "./configuration.json"
 )
 
-func OpenDB() *sql.DB {
+func OpenDBForRoute() *sql.DB {
 	config := GetDBConfiguration(configurationPath)
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		config.Host, config.Port, config.User, config.Password, config.DBName)
 	database, _ := sql.Open("postgres", psqlInfo)
 	return database
+}
+func OpenDB() (*sql.DB, *Config) {
+	config := GetDBConfiguration(configurationPath)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		config.Host, config.Port, config.User, config.Password, config.DBName)
+	database, _ := sql.Open("postgres", psqlInfo)
+	return database, config
 }
 func SqlExecution(scriptPath string, db *sql.DB) {
 	sqlScript, err := ioutil.ReadFile(scriptPath)
@@ -36,11 +44,11 @@ func SqlExecution(scriptPath string, db *sql.DB) {
 	}
 }
 func EstablishDB() {
-	db := OpenDB()
+	db, DBConfig := OpenDB()
 	defer db.Close()
-	SqlExecution(GetDBConfiguration(configurationPath).ScriptCreateFile, db)
+	SqlExecution(DBConfig.ScriptCreateFile, db)
 	utils.PrettyLogSuccess("Database created Successfully ...")
-	SqlExecution(GetDBConfiguration(configurationPath).ScriptSeedFile, db)
+	SqlExecution(DBConfig.ScriptSeedFile, db)
 	utils.PrettyLogSuccess("Seed created Successfully ...")
 	utils.PrettyLogSuccess("Database has been established ...")
 }

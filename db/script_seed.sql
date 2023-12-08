@@ -5,7 +5,7 @@ INSERT INTO Department (DepartmentCode, DepartmentName, Location) VALUES ('DP4',
 INSERT INTO Staff (FirstName, Lastname, Email, Profession, Sex, DOB, HireDate, DepartmentID) VALUES 
 		('Mohamed Fares','Ben Ayed', 'feres.ba@qorevirtual.com', 'Software engineer', 'Male', '1997-03-06', '2023-01-20', 2);
 -- Seed for Candidate table
-INSERT INTO Candidate (FirstName, LasttName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB)
+INSERT INTO Candidate (FirstName, LastName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB)
 VALUES
     ('John', 'Doe', 'john.doe@example.com', 'Software Developer', 'Bachelor in Computer Science', '3 years at XYZ Company', 'Male', '1995-08-15'),
     ('Alice', 'Smith', 'alice.smith@example.com', 'Data Analyst', 'Master in Statistics', '2 years at ABC Corporation', 'Female', '1990-05-22'),

@@ -26,9 +26,9 @@ type Staff struct {
 const timeLayout = "2006-01-02"
 
 func DBInsertStaff(db *sql.DB, row *Staff) error {
-	sqlStr := `INSERT INTO Staff (FirstName, LastName, Email, Profession, Sex, DOB, HireDate, DepartmentID) VALUES
-	 (?,?,?,?,?,?,?,?)`
-	_, err := db.Exec(sqlStr, row.FirstName, row.LastName, row.Email, row.Profession, row.Sex, row.DOB.Format(timeLayout), row.HireDate.Format(timeLayout), row.DepartmentID)
+	sqlStr := `INSERT INTO Staff (FirstName, LastName, Email, Profession, Sex, DOB, HireDate, DepartmentID) 
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+	_, err := db.Exec(sqlStr, row.FirstName, row.LastName, row.Email, row.Profession, row.Sex, row.DOB, row.HireDate, row.DepartmentID)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -60,14 +60,14 @@ func DBGetAllStaffDetails(db *sql.DB) ([]*Staff, error) {
 			return []*Staff{}, err
 		}
 		if Dob != "" {
-			stf.DOB, err = time.Parse(timeLayout, Dob)
+			stf.DOB, err = time.Parse(time.RFC3339, Dob)
 			if err != nil {
 				log.Fatal(err)
 				return staff, err
 			}
 		}
 		if HireDate != "" {
-			stf.HireDate, err = time.Parse(timeLayout, HireDate)
+			stf.HireDate, err = time.Parse(time.RFC3339, HireDate)
 			if err != nil {
 				log.Fatal(err)
 				return staff, err

@@ -14,7 +14,7 @@ type Department struct {
 
 func DBInsertDepartment(db *sql.DB, row *Department) error {
 	sqlStr := `INSERT INTO Department (DepartmentCode, DepartmentName, Location) VALUES
-	 (?,?,?)`
+	 ($1,$2,$3)`
 	_, err := db.Exec(sqlStr, row.DepartmentCode, row.DepartmentName, row.DepartmentLocation)
 	if err != nil {
 		log.Fatal(err)

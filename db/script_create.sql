@@ -31,7 +31,7 @@ CREATE TABLE Staff (
 CREATE TABLE Candidate (
     CandidateID SERIAL PRIMARY KEY,
     FirstName TEXT NOT NULL,
-    LasttName TEXT NOT NULL, -- Typo: should be LastName
+    LastName TEXT NOT NULL, -- Typo: should be LastName
     PersonalEmail TEXT NOT NULL,
     JobOffer TEXT NOT NULL,
     Degree TEXT NOT NULL,

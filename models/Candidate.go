@@ -20,9 +20,9 @@ type Candidate struct {
 }
 
 func DBInsertCandidate(db *sql.DB, row *Candidate) error {
-	sqlStr := `INSERT INTO Candidate (FirstName, LasttName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB) VALUES
-	 (?, ?, ?, ?, ?, ?, ?, ?)`
-	_, err := db.Exec(sqlStr, row.FirstName, row.LastName, row.PersonalEmail, row.JobOffer, row.Degree, row.RecentExperience, row.Sex, row.DOB.Format(timeLayout))
+	sqlStr := `INSERT INTO Candidate (FirstName, LastName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB) VALUES
+	 ($1,$2,$3,$4,$5,$6,$7,$8)`
+	_, err := db.Exec(sqlStr, row.FirstName, row.LastName, row.PersonalEmail, row.JobOffer, row.Degree, row.RecentExperience, row.Sex, row.DOB)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -31,7 +31,7 @@ func DBInsertCandidate(db *sql.DB, row *Candidate) error {
 }
 func DBGetAllCandidates(db *sql.DB) ([]*Candidate, error) {
 	var candidate []*Candidate
-	sqlStr := `SELECT CandidateID, FirstName, LasttName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB 
+	sqlStr := `SELECT CandidateID, FirstName, LastName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB 
 	FROM Candidate`
 	rows, err := db.Query(sqlStr)
 	if err != nil {
@@ -52,7 +52,7 @@ func DBGetAllCandidates(db *sql.DB) ([]*Candidate, error) {
 			return candidate, err
 		}
 		if dob != "" {
-			cand.DOB, err = time.Parse(timeLayout, dob)
+			cand.DOB, err = time.Parse(time.RFC3339, dob)
 			if err != nil {
 				log.Fatal(err)
 				return candidate, err
@@ -68,9 +68,9 @@ func DBGetAllCandidates(db *sql.DB) ([]*Candidate, error) {
 }
 
 func DBGetCandidateByID(db *sql.DB, candId uint) (*Candidate, error) {
-	sqlStr := `SELECT FirstName, LasttName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB 
+	sqlStr := `SELECT FirstName, LastName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB 
 	FROM Candidate 
-	WHERE CandidateID = ?`
+	WHERE CandidateID = $1`
 	row := db.QueryRow(sqlStr, candId)
 
 	var candidateRow Candidate
@@ -85,7 +85,7 @@ func DBGetCandidateByID(db *sql.DB, candId uint) (*Candidate, error) {
 		return nil, err
 	}
 	if dob != "" {
-		candidateRow.DOB, err = time.Parse(timeLayout, dob)
+		candidateRow.DOB, err = time.Parse(time.RFC3339, dob)
 		if err != nil {
 			log.Fatal(err)
 			return nil, err
@@ -93,9 +93,9 @@ func DBGetCandidateByID(db *sql.DB, candId uint) (*Candidate, error) {
 	}
 	return &candidateRow, nil
 }
-func DBDeleteCandidate(db *sql.DB, candId uint) error {
-	sqlStr := `DELETE FROM Candidate WHERE CandidateID=? `
-	_, err := db.Exec(sqlStr, candId)
+func DBDeleteCandidate(db *sql.DB, candID uint) error {
+	sqlStr := `DELETE FROM Candidate WHERE CandidateID = $1`
+	_, err := db.Exec(sqlStr, candID)
 	if err != nil {
 		log.Fatal(err)
 		return err
@@ -105,7 +105,7 @@ func DBDeleteCandidate(db *sql.DB, candId uint) error {
 
 func DBHireCandidate(db *sql.DB, candId uint, StaffData CandidateToStaffData) error {
 	candidateRow, err := DBGetCandidateByID(db, candId)
-	if candidateRow == nil || err != nil {
+	if err != nil {
 		return err
 	}
 	err = DBDeleteCandidate(db, candId)

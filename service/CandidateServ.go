@@ -23,7 +23,6 @@ func InsertCandidate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert Candidate"})
 		return
 	}
-
 	response.Success(c, http.StatusCreated, gin.H{"message": "Candidate inserted successfully"})
 }
 func DeleteCandidate(c *gin.Context) {

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 	"rhmanager/models"
+	"rhmanager/response"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ func InsertCandidate(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Candidate inserted successfully"})
+	response.Success(c, http.StatusCreated, gin.H{"message": "Candidate inserted successfully"})
 }
 func DeleteCandidate(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -39,7 +40,7 @@ func DeleteCandidate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete candidate"})
 		return
 	}
-	c.JSON(http.StatusAccepted, gin.H{"message": "Candidate: Successfull deletion!"})
+	response.Success(c, http.StatusAccepted, gin.H{"message": "Candidate: Successfull deletion!"})
 }
 func GetCandidateDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -48,7 +49,7 @@ func GetCandidateDetails(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get all staff"})
 		return
 	}
-	c.JSON(http.StatusOK, candidate)
+	response.Success(c, http.StatusOK, candidate)
 }
 func HireCandidate(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -68,5 +69,5 @@ func HireCandidate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get all staff"})
 		return
 	}
-	c.JSON(http.StatusAccepted, gin.H{"message": "Candidate: Successfull Hiring to Staff!"})
+	response.Success(c, http.StatusOK, gin.H{"message": "Candidate: Successfull Hiring to Staff!"})
 }

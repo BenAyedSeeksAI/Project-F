@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"rhmanager/models"
+	"rhmanager/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +22,7 @@ func InsertStaff(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert staff"})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"message": "Staff inserted successfully"})
+	response.Success(c, http.StatusCreated, gin.H{"message": "Staff inserted successfully"})
 }
 func GetStaffDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -30,5 +31,5 @@ func GetStaffDetails(c *gin.Context) {
 		log.Fatal(err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, staff)
+	response.Success(c, http.StatusOK, staff)
 }

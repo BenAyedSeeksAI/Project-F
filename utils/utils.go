@@ -18,7 +18,7 @@ func PrettyLogSuccess(message string) {
 	fmt.Println("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤")
 }
 func IDExists(dbse *sql.DB, id uint, tableName string, idColumnName string) bool {
-	sqlStr := `SELECT COUNT(*) FROM %s WHERE  %s= ?`
+	sqlStr := `SELECT COUNT(*) FROM %s WHERE  %s= $1`
 	CompleteSqlStr := fmt.Sprintf(sqlStr, tableName, idColumnName)
 	row := dbse.QueryRow(CompleteSqlStr, id)
 	var count int

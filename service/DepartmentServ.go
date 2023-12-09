@@ -22,7 +22,7 @@ func InsertDepartment(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert staff"})
 		return
 	}
-	response.Success(c, http.StatusCreated, gin.H{"message": "Department inserted successfully"})
+	response.SuccessOperation(c, http.StatusCreated, "InsertDepartment", response.INSERTION)
 }
 func GetDepartmentDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)

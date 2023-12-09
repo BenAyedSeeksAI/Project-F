@@ -23,7 +23,7 @@ func InsertCandidate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert Candidate"})
 		return
 	}
-	response.Success(c, http.StatusCreated, gin.H{"message": "Candidate inserted successfully"})
+	response.SuccessOperation(c, http.StatusCreated, "InsertCandidate", response.INSERTION)
 }
 func DeleteCandidate(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -39,7 +39,7 @@ func DeleteCandidate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete candidate"})
 		return
 	}
-	response.Success(c, http.StatusAccepted, gin.H{"message": "Candidate: Successfull deletion!"})
+	response.SuccessOperation(c, http.StatusAccepted, "DeleteCandidate", response.DELETION)
 }
 func GetCandidateDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -68,5 +68,5 @@ func HireCandidate(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get all staff"})
 		return
 	}
-	response.Success(c, http.StatusOK, gin.H{"message": "Candidate: Successfull Hiring to Staff!"})
+	response.SuccessOperation(c, http.StatusAccepted, "HireCandidate", response.OPERATION)
 }

@@ -23,6 +23,11 @@ type APIResponse struct {
 	Data       any        `json:"data"`
 	StatusCode int        `json:"statusCode"`
 }
+type APIOperationResponse struct {
+	Error      []APIError `json:"error"`
+	Message    string     `json:"message"`
+	StatusCode int        `json:"statusCode"`
+}
 
 func Success(c *gin.Context, statusCode int, data any) {
 	var nonNilData any
@@ -40,37 +45,21 @@ func Success(c *gin.Context, statusCode int, data any) {
 	})
 }
 func SuccessOperation(c *gin.Context, statusCode int, functionName string, operationType int) {
+	operationResponse := &APIOperationResponse{
+		Error:      []APIError{},
+		StatusCode: statusCode,
+	}
 	if operationType == INSERTION {
-		message := make(map[string]string)
-		message["success_message"] = fmt.Sprintf("Insertion in [%s] is successful!", functionName)
-		c.JSON(statusCode, &APIResponse{
-			Error:      []APIError{},
-			Data:       message,
-			StatusCode: statusCode,
-		})
+		operationResponse.Message = fmt.Sprintf("Insertion in [%s] is successful!", functionName)
+		c.JSON(statusCode, operationResponse)
 	} else if operationType == DELETION {
-		message := make(map[string]string)
-		message["success_message"] = fmt.Sprintf("Deletion in [%s] is successful!", functionName)
-		c.JSON(statusCode, &APIResponse{
-			Error:      []APIError{},
-			Data:       message,
-			StatusCode: statusCode,
-		})
+		operationResponse.Message = fmt.Sprintf("Deletion in [%s] is successful!", functionName)
+		c.JSON(statusCode, operationResponse)
 	} else if operationType == UPDATE {
-		message := make(map[string]string)
-		message["success_message"] = fmt.Sprintf("Update in [%s] is successful!", functionName)
-		c.JSON(statusCode, &APIResponse{
-			Error:      []APIError{},
-			Data:       message,
-			StatusCode: statusCode,
-		})
+		operationResponse.Message = fmt.Sprintf("Update in [%s] is successful!", functionName)
+		c.JSON(statusCode, operationResponse)
 	} else {
-		message := make(map[string]string)
-		message["success_message"] = fmt.Sprintf("Operation in [%s] is Succesfull!", functionName)
-		c.JSON(statusCode, &APIResponse{
-			Error:      []APIError{},
-			Data:       message,
-			StatusCode: statusCode,
-		})
+		operationResponse.Message = fmt.Sprintf("Operation in [%s] is Succesfull!", functionName)
+		c.JSON(statusCode, operationResponse)
 	}
 }

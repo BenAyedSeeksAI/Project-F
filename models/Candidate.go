@@ -102,7 +102,20 @@ func DBDeleteCandidate(db *sql.DB, candID uint) error {
 	}
 	return nil
 }
-
+func DBUpdateCandidate(db *sql.DB, candId uint, updatedCandidate Candidate) error {
+	sqlStr := `UPDATE Candidate 
+	SET FirstName= $1, LastName=$2 ,PersonalEmail=$3, JobOffer=$4, Degree=$5, RecentExperience=$6, Sex=$7, DOB=$8
+	WHERE CandidateID=$9`
+	_, err := db.Exec(sqlStr, updatedCandidate.FirstName, updatedCandidate.LastName,
+		updatedCandidate.PersonalEmail, updatedCandidate.JobOffer,
+		updatedCandidate.Degree, updatedCandidate.RecentExperience,
+		updatedCandidate.Sex, updatedCandidate.DOB, candId)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
 func DBHireCandidate(db *sql.DB, candId uint, StaffData CandidateToStaffData) error {
 	candidateRow, err := DBGetCandidateByID(db, candId)
 	if err != nil {

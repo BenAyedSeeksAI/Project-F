@@ -25,6 +25,26 @@ func InsertCandidate(c *gin.Context) {
 	}
 	response.SuccessOperation(c, http.StatusCreated, "InsertCandidate", response.INSERTION)
 }
+func UpdateCandidate(c *gin.Context) {
+	dbse := c.MustGet("db").(*sql.DB)
+	var updatedCandidate models.Candidate
+	if err := c.ShouldBindJSON(&updatedCandidate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	id := c.Param("id")
+	IntId, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	err = models.DBUpdateCandidate(dbse, uint(IntId), updatedCandidate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	response.SuccessOperation(c, http.StatusAccepted, "UpdateCandidate", response.UPDATE)
+}
 func DeleteCandidate(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
 	var data map[string]interface{}

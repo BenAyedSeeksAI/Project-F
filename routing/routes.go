@@ -36,6 +36,7 @@ func RunRouting() {
 		candidateGroup.GET("/get_all", service.GetCandidateDetails)
 		candidateGroup.POST("/create", service.InsertCandidate)
 		candidateGroup.POST("/delete", service.DeleteCandidate)
+		candidateGroup.PUT("/update/:id/", service.UpdateCandidate)
 		candidateGroup.POST("/hire/:id/", service.HireCandidate)
 	}
 	r.Run(":8080")

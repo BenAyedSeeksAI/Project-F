@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"rhmanager/models"
 	"rhmanager/response"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,21 @@ func InsertDepartment(c *gin.Context) {
 		return
 	}
 	response.SuccessOperation(c, http.StatusCreated, "InsertDepartment", response.INSERTION)
+}
+func GetDepartmentByID(c *gin.Context) {
+	dbse := c.MustGet("db").(*sql.DB)
+	id := c.Param("id")
+	IntId, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	department, err := models.DBGetDepartmentByID(dbse, uint(IntId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get department by id"})
+		return
+	}
+	response.Success(c, http.StatusOK, department)
 }
 func GetDepartmentDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)

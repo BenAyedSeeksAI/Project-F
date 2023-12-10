@@ -12,6 +12,22 @@ type Department struct {
 	DepartmentLocation string `json:"dp_location"`
 }
 
+func DBGetDepartmentByID(db *sql.DB, deptId uint) (Department, error) {
+	sqlStr := `SELECT DepartmentID, DepartmentCode, DepartmentName, Location 
+	FROM Department
+	WHERE DepartmentID= $1`
+	row := db.QueryRow(sqlStr, deptId)
+	var departmentRow Department
+	err := row.Scan(
+		&departmentRow.DepartmentID, &departmentRow.DepartmentCode,
+		&departmentRow.DepartmentName, &departmentRow.DepartmentLocation,
+	)
+	if err != nil {
+		log.Fatal(err)
+		return Department{}, err
+	}
+	return departmentRow, nil
+}
 func DBInsertDepartment(db *sql.DB, row *Department) error {
 	sqlStr := `INSERT INTO Department (DepartmentCode, DepartmentName, Location) VALUES
 	 ($1,$2,$3)`

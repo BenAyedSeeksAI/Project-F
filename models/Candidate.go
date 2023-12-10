@@ -68,7 +68,7 @@ func DBGetAllCandidates(db *sql.DB) ([]*Candidate, error) {
 }
 
 func DBGetCandidateByID(db *sql.DB, candId uint) (*Candidate, error) {
-	sqlStr := `SELECT FirstName, LastName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB 
+	sqlStr := `SELECT CandidateID, FirstName, LastName, PersonalEmail, JobOffer, Degree, RecentExperience, Sex, DOB 
 	FROM Candidate 
 	WHERE CandidateID = $1`
 	row := db.QueryRow(sqlStr, candId)
@@ -76,7 +76,7 @@ func DBGetCandidateByID(db *sql.DB, candId uint) (*Candidate, error) {
 	var candidateRow Candidate
 	var dob string
 	err := row.Scan(
-		&candidateRow.FirstName, &candidateRow.LastName, &candidateRow.PersonalEmail,
+		&candidateRow.CandidateID, &candidateRow.FirstName, &candidateRow.LastName, &candidateRow.PersonalEmail,
 		&candidateRow.JobOffer, &candidateRow.Degree, &candidateRow.RecentExperience,
 		&candidateRow.Sex, &dob,
 	)

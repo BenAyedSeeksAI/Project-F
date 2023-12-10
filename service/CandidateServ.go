@@ -70,6 +70,21 @@ func GetCandidateDetails(c *gin.Context) {
 	}
 	response.Success(c, http.StatusOK, candidate)
 }
+func GetCandidateById(c *gin.Context) {
+	dbse := c.MustGet("db").(*sql.DB)
+	id := c.Param("id")
+	IntId, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	candidate, err := models.DBGetCandidateByID(dbse, uint(IntId))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	response.Success(c, http.StatusOK, candidate)
+}
 func HireCandidate(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
 	var additionalStaffData models.CandidateToStaffData

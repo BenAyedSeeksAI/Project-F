@@ -23,21 +23,22 @@ func RunRouting() {
 	r.GET("/", func(ctx *gin.Context) { ctx.JSON(http.StatusOK, gin.H{"msg": "Hello api"}) })
 	departmentGroup := r.Group("/departments")
 	{
-		departmentGroup.GET("/get_all", service.GetDepartmentDetails)
+		departmentGroup.GET("/get/all", service.GetDepartmentDetails)
 		departmentGroup.POST("/create", service.InsertDepartment)
 	}
 	staffGroup := r.Group("/staffs")
 	{
-		staffGroup.GET("/get_all", service.GetStaffDetails)
+		staffGroup.GET("/get/all", service.GetStaffDetails)
 		staffGroup.POST("/create", service.InsertStaff)
 	}
 	candidateGroup := r.Group("/candidates")
 	{
-		candidateGroup.GET("/get_all", service.GetCandidateDetails)
+		candidateGroup.GET("/get/all", service.GetCandidateDetails)
+		candidateGroup.GET("/get/:id", service.GetCandidateById)
 		candidateGroup.POST("/create", service.InsertCandidate)
 		candidateGroup.POST("/delete", service.DeleteCandidate)
-		candidateGroup.PUT("/update/:id/", service.UpdateCandidate)
-		candidateGroup.POST("/hire/:id/", service.HireCandidate)
+		candidateGroup.PUT("/update/:id", service.UpdateCandidate)
+		candidateGroup.POST("/hire/:id", service.HireCandidate)
 	}
 	r.Run(":8080")
 }

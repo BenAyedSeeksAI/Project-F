@@ -25,6 +25,20 @@ func InsertDepartment(c *gin.Context) {
 	}
 	response.SuccessOperation(c, http.StatusCreated, "InsertDepartment", response.INSERTION)
 }
+func DeleteDepartment(c *gin.Context) {
+	dbse := c.MustGet("db").(*sql.DB)
+	var data map[string]interface{}
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse JSON body"})
+		return
+	}
+	deptID := uint(int(data["dept_id"].(float64)))
+	err := models.DBDeleteCandidate(dbse, deptID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete candidate"})
+		return
+	}
+}
 func GetDepartmentByID(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
 	id := c.Param("id")

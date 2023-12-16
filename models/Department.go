@@ -12,6 +12,15 @@ type Department struct {
 	DepartmentLocation string `json:"dp_location"`
 }
 
+func DBDeleteDepartment(db *sql.DB, deptID uint) error {
+	sqlStr := `DELETE FROM Department WHERE DepartmentID = $1`
+	_, err := db.Exec(sqlStr, deptID)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
 func DBGetDepartmentByID(db *sql.DB, deptId uint) (Department, error) {
 	sqlStr := `SELECT DepartmentID, DepartmentCode, DepartmentName, Location 
 	FROM Department

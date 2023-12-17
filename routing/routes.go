@@ -31,6 +31,7 @@ func RunRouting() {
 	staffGroup := r.Group("/staffs")
 	{
 		staffGroup.GET("/get/all", service.GetStaffDetails)
+		staffGroup.GET("/get/:id", service.GetStaffByID)
 		staffGroup.POST("/create", service.InsertStaff)
 	}
 	candidateGroup := r.Group("/candidates")

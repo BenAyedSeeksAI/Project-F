@@ -27,7 +27,6 @@ func RunRouting() {
 		departmentGroup.GET("/get/:id", service.GetDepartmentByID)
 		departmentGroup.POST("/create", service.InsertDepartment)
 		departmentGroup.POST("/delete", service.DeleteDepartment)
-
 	}
 	staffGroup := r.Group("/staffs")
 	{

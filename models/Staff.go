@@ -25,6 +25,15 @@ type Staff struct {
 
 const timeLayout = "2006-01-02"
 
+func DBDeleteStaff(db *sql.DB, id uint) error {
+	sqlStr := `DELETE FROM Staff WHERE StaffID = $1`
+	_, err := db.Exec(sqlStr, id)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
 func DBInsertStaff(db *sql.DB, row *Staff) error {
 	sqlStr := `INSERT INTO Staff (FirstName, LastName, Email, Profession, Sex, DOB, HireDate, DepartmentID) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`

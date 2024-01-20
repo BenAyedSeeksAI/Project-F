@@ -33,6 +33,7 @@ func RunRouting() {
 		staffGroup.GET("/get/all", service.GetStaffDetails)
 		staffGroup.GET("/get/:id", service.GetStaffByID)
 		staffGroup.POST("/create", service.InsertStaff)
+		staffGroup.POST("/delete", service.DeleteStaff)
 	}
 	candidateGroup := r.Group("/candidates")
 	{

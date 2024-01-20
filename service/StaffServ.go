@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"rhmanager/models"
 	"rhmanager/response"
+	"rhmanager/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,12 +19,17 @@ func InsertStaff(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := models.DBInsertStaff(dbse, &staff)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert staff"})
+	if utils.IDExists(dbse, uint(staff.DepartmentID), "Department", "DepartmentID") {
+		err := models.DBInsertStaff(dbse, &staff)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert staff"})
+			return
+		}
+		response.SuccessOperation(c, http.StatusCreated, "InsertStaff", response.INSERTION)
 		return
 	}
-	response.SuccessOperation(c, http.StatusCreated, "InsertStaff", response.INSERTION)
+	c.JSON(http.StatusBadRequest, gin.H{"error": "department id doesn't exists"})
+	return
 }
 func GetStaffDetails(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
@@ -33,6 +39,21 @@ func GetStaffDetails(c *gin.Context) {
 		return
 	}
 	response.Success(c, http.StatusOK, staff)
+}
+func DeleteStaff(c *gin.Context) {
+	dbse := c.MustGet("db").(*sql.DB)
+	var data map[string]interface{}
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to parse JSON body"})
+		return
+	}
+	candId := uint(int(data["staff_id"].(float64)))
+	err := models.DBDeleteStaff(dbse, candId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	response.SuccessOperation(c, http.StatusAccepted, "DeleteStaffByID", response.DELETION)
 }
 func GetStaffByID(c *gin.Context) {
 	dbse := c.MustGet("db").(*sql.DB)
